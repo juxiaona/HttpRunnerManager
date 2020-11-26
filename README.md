@@ -45,6 +45,15 @@ Key Features
     ```bash
         service rabbitmq-server start
     ```
+    docker 安装rabbitmq
+    docker pull rabbitmq:3.7.7-management
+    启动
+    docker run -d --name Myrabbitmq -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=admin -p 15672:15672 -p 5672:5672 rabbitmq:3.7.7-management
+    说明：
+    -d 后台运行容器；
+    --name 指定容器名；
+    -p 指定服务运行的端口（5672：应用访问端口；15672：控制台Web端口号）；
+    -e 指定环境变量；（RABBITMQ_DEFAULT_USER：默认的用户名；RABBITMQ_DEFAULT_PASS：默认用户名的密码）
 
 4. 修改:HttpRunnerManager/HttpRunnerManager/settings.py里worker相关配置
     ```python
@@ -80,6 +89,7 @@ Key Features
     ```bash
         python manage.py runserver 0.0.0.0:8000
     ```
+    后台启动：nohup python3 manage.py runserver 0.0.0.0:8007 >djo.out 2>&1 &
 
 9. 启动worker, 如果选择同步执行并确保不会使用到定时任务，那么此步骤可忽略
     ```bash
@@ -87,7 +97,7 @@ Key Features
         python manage.py celery beat --loglevel=info #启动定时任务监听器
         celery flower #启动任务监控后台
     ```
-
+    后台启动：nohup python3 manage.py celery -A HttpRunnerManager worker --loglevel=info >work.out 2>&1 &
 10. 访问：http://localhost:5555/dashboard 即可查看任务列表和状态
 
 11. 浏览器输入：http://127.0.0.1:8000/api/register/  注册用户，开始尽情享用平台吧
